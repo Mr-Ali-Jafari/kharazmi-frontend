@@ -1,0 +1,22 @@
+src/components/css/Navbar.css
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #1E3A8A; /* Tailwind's bg-blue-800 */
+  height: 4rem; /* Tailwind's h-16 */
+}
+
+.navbar-item {
+  cursor: pointer;
+  color: white;
+  transition: color 0.3s;
+}
+
+.navbar-item:hover {
+  color: #A5B4FC; /* Tailwind's hover:text-blue-300 */
+}
+
+.active {
+  border-bottom: 2px solid #3B82F6; /* Tailwind's border-blue-500 */
+}
