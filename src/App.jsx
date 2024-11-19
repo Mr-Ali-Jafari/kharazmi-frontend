@@ -114,7 +114,7 @@ function App() {
           />
 
           <Route
-            path="/chat"
+            path="*"
             element={
               <AuthGuard>
                 <div className="flex h-full">

@@ -61,7 +61,7 @@ const ChatWindow = ({ isSidebarExpanded }) => {
             <div key={index} className="flex items-start mb-3 animate-slide-in">
               <img
                 style={{ borderRadius: '50%' }}
-                src="https://via.placeholder.com/40"
+                src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADgAAAA4CAMAAACfWMssAAAAQlBMVEV0qpz///94rJ9ppJVup5j7/fzC19H0+Pdlo5OrycHV49+yzsa40cqKtqrn7+2Su7Dd6ebN3tlcno2BsaWjxLuav7UZXoJDAAADMElEQVRIiZ2Xi3KsIAyGkQTFO+ru+7/qSUJEUPa0W6cz3a58JPlzgZrmfIZ+Pex/n2Pth7Tc6O8RAM2PDwKMBTjgLyhlcbjAyf8W48dPJzjBN5wxMEVw+Mqe2BwErIVHKtDPR72QwfH5Fo52IW9c6D+gOBL4CBDNlS3X1+OHxgz3NzgLsoTFSaYAKj7DYHqscG5ED+DnIe6wDNNR7o+9We8GyU7QesC9TU6HuUBXc9x82MiG5geOpcmeIt2HsaU9Lojz4yax9gfgMXb0sc1IW4CIfdD3GKu5e3nxGqXOMj0KUEqpaWZ6De8uepeWwov+tnVQI+K1QTJh+SOoUkBCbVABkW1sXeO8QRZzERnhCE0bUWyy8rxAIHtu3hP4kkhlC60fFvyNdxB7ek+SnGC389LeaSqWFQxSlNMDJKJZ0VygN7By0JuxGjCspPgDpC+DNxm4W6k3LjVYo8Q1kGNh/y9Qh9LEwqA/R9R4ByHEJMGlKkGcV6cqbSnHJUjhQAlSFjG6q3nhiF81EHPQxWaAmXUdDL/zbVY7CRy01AjcVVV5fNek2vMb9/VNnDEqxlkJB+3dQUpTy5Y67ltwyWRKhyUZeK0o35agp7KTLzh21fUqAPJ189xOsUUyV8mT3UVwTr5etWrZEq+OQy4Th0AfQa7z5Q5yJcZCodVLno4MhBoYp+ImLQQvdxZAAZJb4QGmqmLlEafYGGOXgfhO1ZqBpNgqJroVzkIZ7J6DntRdTQ0ECaoJViYcN6HPQFyblKYMnKQSYxNebZ9ZROOuQZeBb51F2vatqpTE2blsl3Na5cPqnEU8aEKWFwXZ+a4yrGQW6axGlGxrwLopB21MBZTaeaXBqbXXvSHlOD88cpAHHV1AdOS/upRUmcWhL6405REg/TMeCEcv2m5G1/JJVJ6jtjjmtDPOWXoepn7Jh/8JFgcrzCFx7a6nK9J37n6W2/tRDsc0LHR6c73NfJyb0eXT7QKflwe5LUgmXNyhwhH4vK5Ey+nYOIfcA6xckKLhPjC7tEdtawI/mIw+46drmf3TJVBBKo8/gs34vU2rV+vfXMhrIF3e/HfsCTby74P9GUjgP1rAG9tkhEg8AAAAAElFTkSuQmCC"
                 alt="User Avatar"
                 className="w-10 h-10 mr-2 border-2 border-purple-400 shadow-lg"
               />

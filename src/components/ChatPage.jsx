@@ -18,17 +18,42 @@ const ChatPage = ({ isSidebarExpanded }) => {
         method: "GET",
         headers: {
           "Authorization": `Bearer ${token}`,
-        }
+        },
       })
-        .then(response => response.json())
-        .then(data => {
+        .then((response) => response.json())
+        .then((data) => {
           setUsername(data.username);
         })
-        .catch(error => console.error("Error fetching profile:", error));
+        .catch((error) => console.error("Error fetching profile:", error));
     }
   }, []);
 
-  // اتصال به WebSocket
+  useEffect(() => {
+    if (groupName) {
+      setLoading(true);
+      fetch(`http://127.0.0.1:8000/chat/messages/${groupName}`)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Failed to fetch messages");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          const fetchedMessages = data.messages.map((msg) => ({
+            text: msg.text,
+            sender: msg.sender,
+            timestamp: msg.timestamp,
+          }));
+          setMessages(fetchedMessages);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching messages:", error);
+          setLoading(false);
+        });
+    }
+  }, [groupName]);
+
   useEffect(() => {
     if (username) {
       const ws = new WebSocket(`ws://127.0.0.1:8000/chat/ws/${groupName}/${username}`);
@@ -37,10 +62,7 @@ const ChatPage = ({ isSidebarExpanded }) => {
         console.log("Connected to WebSocket");
       };
 
-      ws.onmessage = (event) => {
-        const data = event.data;
-        setMessages((prevMessages) => [...prevMessages, { text: data, sender: "server" }]);
-      };
+
 
       ws.onclose = () => {
         console.log("WebSocket connection closed");
@@ -54,16 +76,20 @@ const ChatPage = ({ isSidebarExpanded }) => {
     }
   }, [groupName, username]);
 
-  // ارسال پیام
   const sendMessage = () => {
     if (inputMessage.trim() && socket) {
       socket.send(inputMessage);
-      setInputMessage(""); // پاک کردن ورودی
+      setMessages((prevMessages) => [...prevMessages, { text: inputMessage, sender: username }]); // نمایش پیام ارسالی در صفحه
+      setInputMessage("");
     }
   };
 
   return (
-    <div className={`h-screen bg-gray-900 text-white flex flex-col transition-all duration-300 ${isSidebarExpanded ? 'ml-64' : 'ml-16'}`}>
+    <div
+      className={`h-screen bg-gray-900 text-white flex flex-col transition-all duration-300 ${
+        isSidebarExpanded ? "ml-64" : "ml-16"
+      }`}
+    >
       <div className="flex-grow p-4 overflow-auto bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900 relative shadow-lg">
         <header>
           <h1 className="text-3xl font-semibold">{`Chat with ${groupName}`}</h1>
@@ -75,9 +101,12 @@ const ChatPage = ({ isSidebarExpanded }) => {
           ) : (
             <div className="space-y-4">
               {messages.map((msg, idx) => (
-                <div key={idx} className={`flex ${msg.sender === 'server' ? 'justify-start' : 'justify-end'}`}>
-                  <div className={`bg-${msg.sender === 'server' ? 'gray' : 'blue'}-500 text-white p-2 rounded-lg`}>
-                    {msg.text}
+                <div key={idx} className={`flex ${msg.sender === username ? "justify-end" : "justify-start"}`}>
+                  <div
+                    className={`bg-${msg.sender === username ? "blue" : "gray"}-500 text-white p-2 rounded-lg`}
+                  >
+                    <span className="block font-semibold">{msg.sender}</span>
+                    <span>{msg.text}</span>
                   </div>
                 </div>
               ))}
