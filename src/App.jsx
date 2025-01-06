@@ -11,6 +11,7 @@ import TodoList from './components/TodoList';
 import ScientificCalculator from './components/ScientificCalculator';
 import ChatPage from './components/ChatPage';
 import CreateGroupPage from './components/CreateGroupPage';
+import PersonalChat from './components/PersonalChat';
 import './index.css';
 import './App.css';
 
@@ -106,6 +107,20 @@ function App() {
                 <div className="flex h-screen">
                   <div className="flex-1 overflow-auto">
                     <ResearchProfilePage />
+                  </div>
+                  <NavBar onLogout={handleLogout} />
+                </div>
+              </AuthGuard>
+            }
+          />
+
+          <Route
+            path="/chat-personal"
+            element={
+              <AuthGuard>
+                <div className="flex h-screen">
+                  <div className="flex-1 overflow-auto">
+                    <PersonalChat />
                   </div>
                   <NavBar onLogout={handleLogout} />
                 </div>

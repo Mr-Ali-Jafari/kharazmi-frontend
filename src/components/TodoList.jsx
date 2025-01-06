@@ -1,26 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 const TodoList = () => {
   const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState('');
 
-  const addTodo = () => {
-    if (newTodo.trim()) {
-      setTodos([...todos, { text: newTodo, completed: false }]);
-      setNewTodo('');
+  const API_URL = 'http://127.0.0.1:8000'; 
+
+
+  const getAccessToken = () => {
+    return localStorage.getItem('access_token') || '';
+  };
+
+
+  const axiosInstance = axios.create({
+    baseURL: API_URL,
+    headers: {
+      Authorization: `Bearer ${getAccessToken()}`,
+    },
+  });
+
+  const fetchTodos = async () => {
+    try {
+      const response = await axiosInstance.get('/todos'); 
+      setTodos(response.data);
+    } catch (error) {
+      console.error('Error fetching todos:', error);
     }
   };
 
-  const toggleTodoCompletion = (index) => {
-    const updatedTodos = [...todos];
-    updatedTodos[index].completed = !updatedTodos[index].completed;
-    setTodos(updatedTodos);
+  const addTodo = async () => {
+    if (newTodo.trim()) {
+      try {
+        const response = await axiosInstance.post('/todos/', {
+          title: newTodo,
+          description: '',
+          status: false,
+        });
+        setTodos([...todos, response.data]);
+        setNewTodo('');
+      } catch (error) {
+        console.error('Error adding todo:', error);
+      }
+    }
   };
 
-  const removeTodo = (index) => {
-    const updatedTodos = todos.filter((_, i) => i !== index);
-    setTodos(updatedTodos);
+  const updateTodo = async (id, updatedFields) => {
+    try {
+      const response = await axiosInstance.put('/todos/update', {
+        id,
+        ...updatedFields,
+      });
+      const updatedTodos = todos.map((todo) =>
+        todo.id === id ? { ...todo, ...response.data } : todo
+      );
+      setTodos(updatedTodos);
+    } catch (error) {
+      console.error('Error updating todo:', error.response?.data || error);
+    }
   };
+  
+
+  const toggleTodoCompletion = (id, completed) => {
+    updateTodo(id, { status: completed });
+  };
+
+  const removeTodo = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
+  useEffect(() => {
+    fetchTodos();
+  }, []);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-pink-900">
@@ -42,28 +93,28 @@ const TodoList = () => {
           </button>
         </div>
         <ul className="space-y-4">
-          {todos.map((todo, index) => (
+          {todos.map((todo) => (
             <li
-              key={index}
+              key={todo.id}
               className={`flex items-center justify-between p-4 border-2 border-gray-300 rounded-lg ${
-                todo.completed ? 'bg-green-100' : 'bg-white'
+                todo.status ? 'bg-green-100' : 'bg-white'
               }`}
             >
               <div className="flex items-center space-x-3">
                 <input
                   type="checkbox"
-                  checked={todo.completed}
-                  onChange={() => toggleTodoCompletion(index)}
+                  checked={todo.status}
+                  onChange={() => toggleTodoCompletion(todo.id, !todo.status)}
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500"
                 />
                 <span
-                  className={`text-gray-700 ${todo.completed ? 'line-through text-gray-500' : ''}`}
+                  className={`text-gray-700 ${todo.status ? 'line-through text-gray-500' : ''}`}
                 >
-                  {todo.text}
+                  {todo.title}
                 </span>
               </div>
               <button
-                onClick={() => removeTodo(index)}
+                onClick={() => removeTodo(todo.id)}
                 className="text-red-600 hover:text-red-800 focus:outline-none"
               >
                 X
